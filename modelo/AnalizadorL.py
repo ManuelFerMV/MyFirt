@@ -1,6 +1,8 @@
 from typing import List
-from modelo.Token import Token
-from modelo.Categoria import Categoria
+
+from MyFirt.modelo.Categoria import Categoria
+from MyFirt.modelo.Token import Token
+
 
 class AnalizadorLexico:
     def __init__(self, codigoFuente: str):
@@ -23,7 +25,7 @@ class AnalizadorLexico:
         if token is not None:
             return token
 
-        # TODO llamar acá todos los métodos de extraer, extraerDecimal, extraerIdentificador, etc.
+        # llamar acá todos los métodos de extraer, extraerDecimal, extraerIdentificador, etc.
 
         token = self.extraerNoReconocido(indice)
         return token

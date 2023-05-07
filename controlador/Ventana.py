@@ -12,11 +12,18 @@ def analizar_texto():
 
 # Crear ventana
 ventana = tk.Tk()
-ventana.title("Análisis de texto")
+label = tk.Label(ventana, text="Analizador Léxico",
+                 font=("chill chill", 5), anchor="w", )
+label.grid(row=0, column=0, padx=10, pady=10)
+label.pack()
+
+
+ventana.title("MyFirst")
 
 # Crear cuadro de entrada de texto
 entrada_texto = tk.Entry(ventana, width=50)
 entrada_texto.pack(padx=10, pady=10)
+#entrada_texto.grid(row=0, column=1, padx=10, pady=10)
 
 # Crear botón de análisis de texto
 btn_analizar = tk.Button(ventana, text="Analizar", command=analizar_texto)
