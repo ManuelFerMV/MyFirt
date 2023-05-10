@@ -4,7 +4,7 @@ from enum import Enum
 class Categoria(Enum) :
     NO_RECONOCIDO =1
     ENTERO =2
-    DECIMAL=3
+    REAL=3
     IDENTIFICADOR =4
     PALABRA_RESERVADA=5
     CADENA_CARACTERES=6

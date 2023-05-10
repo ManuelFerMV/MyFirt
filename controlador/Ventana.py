@@ -1,37 +1,43 @@
 import tkinter as tk
+from MyFirst.modelo.AnalizadorL import AnalizadorLexico
+from MyFirst.modelo.Token import Token
 
+class WindowAnalizador(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
+        self.master = master
+        self.master.title("Analizador léxico")
 
-def analizar_texto():
-    texto = entrada_texto.get()
-    texto_mayus = texto.upper()
-    salida_texto.config(state=tk.NORMAL)
-    salida_texto.delete('1.0', tk.END)
-    salida_texto.insert(tk.END, texto_mayus)
-    salida_texto.config(state=tk.DISABLED)
+        # Crear entrada de texto
+        self.label_texto = tk.Label(self.master, text="Ingrese texto aquí")
+        self.label_texto.grid(row=0, column=0)
+        self.entry_texto = tk.Entry(self.master)
+        self.entry_texto.grid(row=0, column=1)
 
+        # Crear botón de análisis
+        self.btn_analizar = tk.Button(self.master, text="Analizar", command=self.obtenerText)
+        self.btn_analizar.grid(row=1, column=1, pady=10)
 
-# Crear ventana
-ventana = tk.Tk()
-label = tk.Label(ventana, text="Analizador Léxico",
-                 font=("chill chill", 5), anchor="w", )
-label.grid(row=0, column=0, padx=10, pady=10)
-label.pack()
+        # Crear cuadro de texto para mostrar resultado
+        self.label_resultado = tk.Label(self.master, text="Resultado:")
+        self.label_resultado.grid(row=2, column=0)
+        self.text_resultado = tk.Text(self.master, height=10, width=50)
+        self.text_resultado.grid(row=3, column=0, columnspan=2, padx=10)
 
+    def obtenerText(self):
+        # Obtener texto ingresado por el usuario
+        codigo_fuente = self.entry_texto.get()
 
-ventana.title("MyFirst")
+        # Crear objeto AnalizadorLexico y analizar el texto ingresado
+        analizador = AnalizadorLexico(codigo_fuente)
+        analizador.analizar()
 
-# Crear cuadro de entrada de texto
-entrada_texto = tk.Entry(ventana, width=50)
-entrada_texto.pack(padx=10, pady=10)
-#entrada_texto.grid(row=0, column=1, padx=10, pady=10)
+        # Obtener lista de tokens
+        lista_tokens = analizador.getListaTokens()
 
-# Crear botón de análisis de texto
-btn_analizar = tk.Button(ventana, text="Analizar", command=analizar_texto)
-btn_analizar.pack(padx=10, pady=5)
+        # Limpiar cuadro de texto de resultado
+        self.text_resultado.delete('1.0', tk.END)
 
-# Crear cuadro de salida de texto
-salida_texto = tk.Text(ventana, width=50, height=10, state=tk.DISABLED)
-salida_texto.pack(padx=10, pady=10)
-
-# Iniciar bucle de eventos
-ventana.mainloop()
+        # Mostrar resultados en el cuadro de texto de resultado
+        for token in lista_tokens:
+            self.text_resultado.insert(tk.END, f"Tipo: {token.getCategoria()} - Valor: {token.getValor()}\n")

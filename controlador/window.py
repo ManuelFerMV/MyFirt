@@ -1,4 +1,8 @@
+from MyFirst.modelo.Categoria import Categoria
+
 import tkinter as tk
+
+
 
 # Función para analizar el texto y mostrarlo en mayúsculas
 def analizar_texto():
