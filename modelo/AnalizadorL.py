@@ -1,35 +1,34 @@
 from typing import List
-import re
-from debugpy.server.cli import switches
 
 from MyFirst.modelo.Categoria import Categoria
 from MyFirst.modelo.Token import Token
-from MyFirst.controlador.Ventana import *
 
 
 class AnalizadorLexico:
-    def __init__(self, codigoFuente: str):
+    def __init__(self, codigoFuente):
         self.codigoFuente = codigoFuente
         self.listaTokens = []
 
     def analizar(self):
         i = 0
         while i < len(self.codigoFuente):
-            token = self.extraerSgteToken(i)
-            if token is not None:
-                self.listaTokens.append(token)
-                i = token.getPosicionFinal()
-            else:
+            if self.codigoFuente[i].isspace():
                 i += 1
+                continue
 
-    def extraerSgteToken(self, indice: int) -> Token:
+            token = self.extraerSgteToken(i)
+            self.listaTokens.append(token)
+            i = token.indiceSgte
+
+    def extraerSgteToken(self, indice: int):
+
         token = self.extraerEntero(indice)
         if token is not None:
             return token
 
         # llamar acá todos los métodos de extraer, extraerDecimal, extraerIdentificador, etc.
 
-        token = self.extraerNoReconocido(indice)
+        token = self.extraerNoReconocido(self, indice)
         return token
 
     def extraerEntero(self, indice: int) -> Token:
@@ -44,7 +43,7 @@ class AnalizadorLexico:
         else:
             return None
 
-    def extraerOperadorAritmetico(self, indice: int, cadena=None) -> Token :
+    def extraerOperadorAritmetico(self, indice: int, cadena=None) -> Token:
 
         posicion = indice
         self.codigoFuente = cadena
@@ -54,28 +53,28 @@ class AnalizadorLexico:
         operadores_aritmeticos = ['+', '-', '*', '/', '%', '**']
 
         if indice >= 0 and indice < len(cadena):
-         if cadena[indice] in operadores_aritmeticos:
-            return  Token(self.codigoFuente[posicion:indice], Categoria.OPERADOR_ARITMETICO, indice)
+            if cadena[indice] in operadores_aritmeticos:
+                return Token(self.codigoFuente[posicion:indice], Categoria.OPERADOR_ARITMETICO, indice)
         return None
 
-
-    def extraerPalabraReservada(self, indice: int, cadena=None) -> Token :
+    def extraerPalabraReservada(self, indice: int, cadena=None) -> Token:
 
         posicion = indice
         self.codigoFuente = cadena
         if indice >= len(self.codigoFuente):
             return None
 
-        palabras_reservadas = ['if', 'else', 'for', 'while', 'switch', 'case', 'return', 'protected', 'static', 'class', 'int', 'float', 'bool','integer', 'double', 'String']
+        palabras_reservadas = ['if', 'else', 'for', 'while', 'switch', 'case', 'return', 'protected', 'static', 'class',
+                               'int', 'float', 'bool', 'integer', 'double', 'String']
 
         for palabra in palabras_reservadas:
             if palabra in cadena:
                 indice = cadena.find(palabra)
-                return  Token(self.codigoFuente[posicion:indice], Categoria.PALABRA_RESERVADA, indice, palabra)
+                return Token(self.codigoFuente[posicion:indice], Categoria.PALABRA_RESERVADA, indice, palabra)
 
         return None, -1
 
-    def extraerOperadorIncremento(self, indice: int, cadena=None) -> Token :
+    def extraerOperadorIncremento(self, indice: int, cadena=None) -> Token:
 
         posicion = indice
         self.codigoFuente = cadena
@@ -237,12 +236,10 @@ class AnalizadorLexico:
 
         return None
 
-
-
     def extraerNoReconocido(self, indice: int) -> Token:
         if indice >= len(self.codigoFuente):
             return None
-        return Token(self.codigoFuente[indice], Categoria.NO_RECONOCIDO, indice+1)
+        return Token(self.codigoFuente[indice], Categoria.NO_RECONOCIDO, indice + 1)
 
     def getListaTokens(self) -> List[Token]:
         return self.listaTokens

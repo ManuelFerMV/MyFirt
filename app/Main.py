@@ -1,12 +1,16 @@
-import tkinter as tk
 from MyFirst.modelo.AnalizadorL import AnalizadorLexico
-from MyFirst.controlador.Ventana import WindowAnalizador
 
-# Crear objeto Tk
-root = tk.Tk()
 
-# Crear ventana de analizador léxico
-ventana_analizador = WindowAnalizador(root)
+def main():
+    codigo_fuente = "123"
+    analizador = AnalizadorLexico(codigo_fuente)
+    analizador.analizar()
 
-# Iniciar loop de la aplicación
-root.mainloop()
+    # Accede a la lista de tokens generada por el analizador léxico
+    lista_tokens = analizador.getListaTokens()
+    for token in lista_tokens:
+        print(token)
+
+
+if __name__ == "__main__":
+    main()
