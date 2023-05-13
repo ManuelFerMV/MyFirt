@@ -1,5 +1,5 @@
 class Token:
-    def __init__(self, palabra: str, categoria: str, indiceSgte: int):
+    def __init__(self, palabra, categoria, indiceSgte):
         self.palabra = palabra
         self.categoria = categoria
         self.indiceSgte = indiceSgte

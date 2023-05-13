@@ -2,7 +2,7 @@ from MyFirst.modelo.AnalizadorL import AnalizadorLexico
 
 
 def main():
-    codigo_fuente = "123"
+    codigo_fuente = 'JBJH@Q311[]@#125'
     analizador = AnalizadorLexico(codigo_fuente)
     analizador.analizar()
 
