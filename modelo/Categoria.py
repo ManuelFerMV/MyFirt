@@ -21,3 +21,5 @@ class Categoria(Enum):
     PARENTESIS_CIERRE = 17
     LLAVES_APERTURA = 18
     LLAVES_CIERRE = 19
+
+

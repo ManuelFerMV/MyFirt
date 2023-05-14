@@ -57,6 +57,10 @@ class AnalizadorLexico:
         if token is not None:
             return token
 
+        token = self.extraer_operador_aritmetico(indice)
+        if token is not None:
+            return token
+
         token = self.extraerSeparadorComa(indice)
         if token is not None:
             return token
@@ -86,6 +90,10 @@ class AnalizadorLexico:
             return token
 
         token = self.extraer_cadena_caracteres(indice)
+        if token is not None:
+            return token
+
+        token = self.extraer_comentarios(indice)
         if token is not None:
             return token
 
@@ -123,9 +131,9 @@ class AnalizadorLexico:
         if self.codigoFuente[indice].isdigit():
             posicion = indice
             while indice < len(self.codigoFuente) and (
-                    self.codigoFuente[indice].isdigit() or self.codigoFuente[indice] == '.'):
+                    self.codigoFuente[indice].isdigit() or self.codigoFuente[indice] == "."):
                 indice += 1
-            if self.codigoFuente[indice - 1] == '.':
+            if self.codigoFuente[indice - 1] == ".":
                 return None
             return Token(self.codigoFuente[posicion:indice], Categoria.REAL, indice)
         else:
@@ -281,6 +289,26 @@ class AnalizadorLexico:
             fin = len(self.codigoFuente)
 
         return Token(self.codigoFuente[inicio:fin], Categoria.CADENA_CARACTERES, fin + 1)
+
+    def extraer_operador_aritmetico(self, indice):
+        operadores_aritmeticos = ["+", "-", "*", "/", "%"]
+        for operador in operadores_aritmeticos:
+            if self.codigoFuente.startswith(operador, indice):
+                return Token(operador, Categoria.OPERADOR_ARITMETICO, indice + len(operador))
+        return None
+
+    def extraer_comentarios(self, indice):
+        if indice >= len(self.codigoFuente) or self.codigoFuente[indice] != "[":
+            return None
+
+        inicio = indice + 1
+        fin = self.codigoFuente.find("]", inicio)
+        if fin == -1:
+            # No se encontró el cierre de la cadena
+            fin = len(self.codigoFuente)
+
+        return Token(self.codigoFuente[inicio:fin], Categoria.COMENTARIO_LINEA, fin + 1)
+
 
     def extraerNoReconocido(self, indice: int):
         return Token(self.codigoFuente[indice], Categoria.NO_RECONOCIDO, indice + 1)
